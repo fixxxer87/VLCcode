@@ -112,14 +112,14 @@ fi
 if [ ! -d "gradle/wrapper" ]; then
     diagnostic "Downloading gradle"
     GRADLE_VERSION=4.6
-    GRADLE_URL=https://download.videolan.org/pub/contrib/gradle/gradle-${GRADLE_VERSION}-bin.zip
-    wget ${GRADLE_URL} 2>/dev/null || curl -O ${GRADLE_URL}
+    GRADLE_URL=https://download.videolan.org/pub/contrib/gradle/gradle-$GRADLE_VERSION-bin.zip
+    wget "$GRADLE_URL" 2>/dev/null || curl -O "$GRADLE_URL"
     checkfail "gradle: download failed"
 
-    unzip -o gradle-${GRADLE_VERSION}-bin.zip
+    unzip -o gradle-"$GRADLE_VERSION"-bin.zip
     checkfail "gradle: unzip failed"
 
-    cd gradle-${GRADLE_VERSION}
+    cd gradle-"$GRADLE_VERSION"
 
     ./bin/gradle --offline wrapper
     checkfail "gradle: wrapper failed"
@@ -128,10 +128,10 @@ if [ ! -d "gradle/wrapper" ]; then
     checkfail "gradle: wrapper failed"
     cd ..
     mkdir -p gradle
-    mv gradle-${GRADLE_VERSION}/gradle/wrapper/ gradle
-    mv gradle-${GRADLE_VERSION}/gradlew .
+    mv gradle-"$GRADLE_VERSION"/gradle/wrapper/ gradle
+    mv gradle-"$GRADLE_VERSION"/gradlew .
     chmod a+x gradlew
-    rm -rf gradle-${GRADLE_VERSION}-bin.zip
+    rm -rf gradle-"$GRADLE_VERSION"-bin.zip
 fi
 
 ####################
@@ -153,8 +153,8 @@ fi
 if [ ! -f gradle.properties ]; then
     echo android.enableJetifier=true > gradle.properties
     echo android.useAndroidX=true >> gradle.properties
-    echo keyStoreFile=$KEYSTORE_FILE >> gradle.properties
-    echo storealias=$STOREALIAS >> gradle.properties
+    echo keyStoreFile="$KEYSTORE_FILE" >> gradle.properties
+    echo storealias="$STOREALIAS" >> gradle.properties
     if [ -z "$PASSWORD_KEYSTORE" ]; then
         echo storepwd=android >> gradle.properties
     fi
@@ -177,16 +177,16 @@ init_local_props() {
     make_regex() {
         echo "$1" | sed -e 's/\([[\^$.*]\)/\\\1/g' -
     }
-    android_sdk_regex=`make_regex "${ANDROID_SDK}"`
-    android_ndk_regex=`make_regex "${ANDROID_NDK}"`
+    android_sdk_regex=`make_regex "$ANDROID_SDK"`
+    android_ndk_regex=`make_regex "$ANDROID_NDK"`
     # check for lines setting the SDK directory
     sdk_line_start="^sdk\.dir="
-    total_sdk_count=`grep -c "${sdk_line_start}" "$1"`
-    good_sdk_count=`grep -c "${sdk_line_start}${android_sdk_regex}\$" "$1"`
+    total_sdk_count=`grep -c "$sdk_line_start" "$1"`
+    good_sdk_count=`grep -c "$sdk_line_start$android_sdk_regex\$" "$1"`
     # check for lines setting the NDK directory
     ndk_line_start="^ndk\.dir="
-    total_ndk_count=`grep -c "${ndk_line_start}" "$1"`
-    good_ndk_count=`grep -c "${ndk_line_start}${android_ndk_regex}\$" "$1"`
+    total_ndk_count=`grep -c "$ndk_line_start" "$1"`
+    good_ndk_count=`grep -c "$ndk_line_start$android_ndk_regex\$" "$1"`
     # if one of each is found and both match the environment vars, no action needed
     if [ "$total_sdk_count" -eq "1" -a "$good_sdk_count" -eq "1" \
 	    -a "$total_ndk_count" -eq "1" -a "$good_ndk_count" -eq "1" ]
@@ -238,7 +238,7 @@ if [ ! -d "vlc" ]; then
 fi
 diagnostic "VLC source found"
 cd vlc
-if ! git cat-file -e ${TESTED_HASH}; then
+if ! git cat-file -e "$TESTED_HASH"; then
     cat 1>&2 << EOF
 ***
 *** Error: Your vlc checkout does not contain the latest tested commit: ${TESTED_HASH}
@@ -247,7 +247,7 @@ EOF
     exit 1
 fi
 if [ "$RELEASE" = 1 ]; then
-    git reset --hard ${TESTED_HASH}
+    git reset --hard "$TESTED_HASH"
 fi
 cd ..
 
@@ -257,7 +257,7 @@ cd ..
 ############
 
 diagnostic "Configuring"
-OPTS="-a ${ANDROID_ABI}"
+OPTS="-a $ANDROID_ABI"
 if [ "$RELEASE" = 1 ]; then
     OPTS="$OPTS release"
 fi
@@ -271,7 +271,7 @@ if [ "$NO_ML" = 1 ]; then
     OPTS="$OPTS --no-ml"
 fi
 
-./compile-libvlc.sh $OPTS
+./compile-libvlc.sh "$OPTS"
 
 ##################
 # Compile the UI #
@@ -287,7 +287,7 @@ if [ "$CHROME_OS" = 1 ]; then
     PLATFORM="Chrome"
 fi
 if [ "$BUILD_LIBVLC" = 1 ];then
-    ./gradlew -p libvlc assemble${BUILDTYPE}
+    ./gradlew -p libvlc assemble"$BUILDTYPE"
     RUN=0
     CHROME_OS=0
 else
@@ -296,15 +296,15 @@ else
     else
         ACTION="assemble"
     fi
-    TARGET="${ACTION}${PLATFORM}${GRADLE_ABI}${BUILDTYPE}"
-    CLI="" ./gradlew $TARGET
+    TARGET="$ACTION$PLATFORM$GRADLE_ABI$BUILDTYPE"
+    CLI="" ./gradlew "$TARGET"
 fi
 
 #######
 # RUN #
 #######
 if [ "$RUN" = 1 ]; then
-    export PATH="${ANDROID_SDK}/platform-tools/:$PATH"
+    export PATH="$ANDROID_SDK/platform-tools/:$PATH"
     adb wait-for-device
     if [ "$RELEASE" = 1 ]; then
         adb shell am start -n org.videolan.vlc/org.videolan.vlc.StartActivity
