@@ -122,7 +122,9 @@ entryPoints(JNIEnv* env, jobject thiz)
 {
     AndroidMediaLibrary *aml = MediaLibrary_getInstance(env, thiz);
     std::vector<medialibrary::FolderPtr> entryPoints = aml->entryPoints();
-    entryPoints.erase(std::remove_if( begin( entryPoints ), end( entryPoints ), []( const medialibrary::FolderPtr f ) { return f->isPresent() == false; } ), end( entryPoints ));
+    entryPoints.erase(std::remove_if( begin( entryPoints ), end( entryPoints ), []( const medialibrary::FolderPtr f ) {
+        return f->isPresent() == false;
+    } ), end( entryPoints ));
     jobjectArray mediaRefs = (jobjectArray) env->NewObjectArray(entryPoints.size(), env->FindClass("java/lang/String"), NULL);
     int index = -1;
     for(medialibrary::FolderPtr const& entrypoint : entryPoints) {
@@ -1584,9 +1586,9 @@ playlistDelete(JNIEnv* env, jobject thiz, jobject medialibrary, jlong playlistId
     return aml->PlaylistDelete(playlistId);
 }
 
- /*
-  * JNI stuff
-  */
+/*
+ * JNI stuff
+ */
 static JNINativeMethod methods[] = {
     {"nativeInit", "(Ljava/lang/String;Ljava/lang/String;)I", (void*)init },
     {"nativeStart", "()V", (void*)start },
@@ -1769,7 +1771,7 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved)
     GET_CLASS(Version_clazz, "android/os/Build$VERSION", false);
     GET_ID(GetStaticFieldID, SDK_INT_fieldID, Version_clazz, "SDK_INT", "I");
     ml_fields.SDK_INT = env->GetStaticIntField(Version_clazz,
-                                               SDK_INT_fieldID);
+                        SDK_INT_fieldID);
 
     GET_CLASS(ml_fields.IllegalStateException.clazz,
               "java/lang/IllegalStateException", true);
@@ -1993,7 +1995,7 @@ static AndroidMediaLibrary *
 MediaLibrary_getInstanceInternal(JNIEnv *env, jobject thiz)
 {
     return (AndroidMediaLibrary*)(intptr_t) env->GetLongField(thiz,
-                                                              ml_fields.MediaLibrary.instanceID);
+            ml_fields.MediaLibrary.instanceID);
 }
 
 AndroidMediaLibrary *

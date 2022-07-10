@@ -146,7 +146,7 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved)
     GET_CLASS(Version_clazz, "android/os/Build$VERSION", false);
     GET_ID(GetStaticFieldID, SDK_INT_fieldID, Version_clazz, "SDK_INT", "I");
     fields.SDK_INT = (*env)->GetStaticIntField(env, Version_clazz,
-                                               SDK_INT_fieldID);
+                     SDK_INT_fieldID);
 
     GET_CLASS(fields.IllegalStateException.clazz,
               "java/lang/IllegalStateException", true);
@@ -387,8 +387,8 @@ void JNI_OnUnload(JavaVM* vm, void* reserved)
 }
 
 void Java_org_videolan_libvlc_LibVLC_nativeNew(JNIEnv *env, jobject thiz,
-                                               jobjectArray jstringArray,
-                                               jstring jhomePath)
+        jobjectArray jstringArray,
+        jstring jhomePath)
 {
     vlcjni_object *p_obj = NULL;
     libvlc_instance_t *p_libvlc = NULL;
@@ -489,9 +489,9 @@ jstring Java_org_videolan_libvlc_LibVLC_changeset(JNIEnv* env, jobject thiz)
 }
 
 void Java_org_videolan_libvlc_LibVLC_nativeSetUserAgent(JNIEnv* env,
-                                                        jobject thiz,
-                                                        jstring jname,
-                                                        jstring jhttp)
+        jobject thiz,
+        jstring jname,
+        jstring jhttp)
 {
     vlcjni_object *p_obj = VLCJniObject_getInstance(env, thiz);
     const char *psz_name, *psz_http;

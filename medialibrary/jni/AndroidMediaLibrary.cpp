@@ -18,7 +18,7 @@ static bool m_started = false;
 
 static void jni_detach_thread(void *data)
 {
-   myVm->DetachCurrentThread();
+    myVm->DetachCurrentThread();
 }
 
 static void key_init(void)
@@ -68,7 +68,7 @@ AndroidMediaLibrary::addDevice(const std::string& uuid, const std::string& path,
 }
 
 std::vector<std::tuple<std::string, std::string, bool>>
-AndroidMediaLibrary::devices()
+        AndroidMediaLibrary::devices()
 {
     return p_lister->devices();
 }

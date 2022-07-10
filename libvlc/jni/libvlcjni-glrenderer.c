@@ -54,7 +54,7 @@ static struct glrenderer *
 GLRenderer_getInstance(JNIEnv *env, jobject thiz)
 {
     struct glrenderer *glr = (struct glrenderer*)(intptr_t)
-        (*env)->GetLongField(env, thiz, fields.GLRenderer.mInstanceID);
+                             (*env)->GetLongField(env, thiz, fields.GLRenderer.mInstanceID);
     if (!glr)
         throw_Exception(env, VLCJNI_EX_ILLEGAL_STATE,
                         "can't get GLRenderer instance");
@@ -232,8 +232,8 @@ gl_getProcAddress(void* opaque, const char* fct_name)
 
 void
 Java_org_videolan_libvlc_GLRenderer_nativeInit(JNIEnv *env, jobject thiz,
-                                               jobject thizmp,
-                                               jint egl_version)
+        jobject thizmp,
+        jint egl_version)
 {
     if (egl_version != 2 && egl_version != 3)
     {
@@ -353,7 +353,7 @@ Java_org_videolan_libvlc_GLRenderer_nativeOnSurfaceCreated(JNIEnv *env, jobject 
     }
 
     if (!eglChooseConfig(glr->display, config_attr, &config, 1, &num_configs)
-       || eglGetError() != EGL_SUCCESS)
+            || eglGetError() != EGL_SUCCESS)
     {
         throw_Exception(env, VLCJNI_EX_RUNTIME,
                         "eglGetConfigAttrib() error: %x", eglGetError());
@@ -412,7 +412,7 @@ Java_org_videolan_libvlc_GLRenderer_nativeOnSurfaceDestroyed(JNIEnv *env, jobjec
 
 jint
 Java_org_videolan_libvlc_GLRenderer_nativeGetVideoTexture(JNIEnv *env, jobject thiz,
-                                                          jobject point)
+        jobject point)
 {
     struct glrenderer *glr = GLRenderer_getInstance(env, thiz);
     if (!glr)
@@ -433,7 +433,7 @@ Java_org_videolan_libvlc_GLRenderer_nativeGetVideoTexture(JNIEnv *env, jobject t
         tex_id = glr->texs[glr->idx_display];
         if (point != NULL)
             (*env)->CallVoidMethod(env, point, fields.Point.setID,
-                                  glr->width, glr->height);
+                                   glr->width, glr->height);
     }
 
     pthread_mutex_unlock(&glr->lock);

@@ -79,10 +79,10 @@ typedef bool (*event_cb)(vlcjni_object *p_obj, const libvlc_event_t *p_ev,
 vlcjni_object *VLCJniObject_getInstance(JNIEnv *env, jobject thiz);
 
 vlcjni_object *VLCJniObject_newFromJavaLibVlc(JNIEnv *env, jobject thiz,
-                                              jobject libVlc);
+        jobject libVlc);
 
 vlcjni_object *VLCJniObject_newFromLibVlc(JNIEnv *env, jobject thiz,
-                                          libvlc_instance_t *p_libvlc);
+        libvlc_instance_t *p_libvlc);
 
 void VLCJniObject_release(JNIEnv *env, jobject thiz, vlcjni_object *p_obj);
 
@@ -111,19 +111,19 @@ static inline void throw_Exception(JNIEnv *env, enum vlcjni_exception type,
     jclass clazz;
     switch (type)
     {
-        case VLCJNI_EX_ILLEGAL_STATE:
-            clazz = fields.IllegalStateException.clazz;
-            break;
-        case VLCJNI_EX_RUNTIME:
-            clazz = fields.RuntimeException.clazz;
-            break;
-        case VLCJNI_EX_OUT_OF_MEMORY:
-            clazz = fields.OutOfMemoryError.clazz;
-            break;
-        case VLCJNI_EX_ILLEGAL_ARGUMENT:
-        default:
-            clazz = fields.IllegalArgumentException.clazz;
-            break;
+    case VLCJNI_EX_ILLEGAL_STATE:
+        clazz = fields.IllegalStateException.clazz;
+        break;
+    case VLCJNI_EX_RUNTIME:
+        clazz = fields.RuntimeException.clazz;
+        break;
+    case VLCJNI_EX_OUT_OF_MEMORY:
+        clazz = fields.OutOfMemoryError.clazz;
+        break;
+    case VLCJNI_EX_ILLEGAL_ARGUMENT:
+    default:
+        clazz = fields.IllegalArgumentException.clazz;
+        break;
     }
     (*env)->ThrowNew(env, clazz, error ? error : fmt);
 
