@@ -429,7 +429,7 @@ cd vlc
 # Build buildsystem tools #
 ###########################
 
-export PATH="$(pwd)/extras/tools/build/bin:$PATH"
+export PATH="$PWD/extras/tools/build/bin:$PATH"
 echo "Building tools"
 cd extras/tools
 ./bootstrap
